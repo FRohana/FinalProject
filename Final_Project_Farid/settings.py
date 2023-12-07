@@ -1,18 +1,14 @@
-# game settings 
+# settings 
 WIDTH = 1280
 HEIGHT = 720
-FPS = 30
+FPS = 60
+active_size = 0
+active_color = "WHITE" 
 
-# player settings
+# user settings
 PLAYER_JUMP = 23
 PLAYER_GRAV = 1.5
 global PLAYER_FRIC
 PLAYER_FRIC = 0.2
 
-# define colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-LIGHTBLUE = (135, 206, 235)
+
