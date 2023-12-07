@@ -1,6 +1,6 @@
 # game settings 
-WIDTH = 1400
-HEIGHT = 900
+WIDTH = 1280
+HEIGHT = 720
 FPS = 30
 
 # player settings
