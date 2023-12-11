@@ -3,7 +3,7 @@ WIDTH = 1280
 HEIGHT = 720
 FPS = 60
 active_size = 0
-active_color = "WHITE" 
+active_color = "black"
 
 # user settings
 PLAYER_JUMP = 23

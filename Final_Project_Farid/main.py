@@ -45,7 +45,7 @@ def draw_menu():
     PURPLE = pg.draw.rect(screen, (128, 0, 128), [130, 70, 50, 50])
     BROWN = pg.draw.rect(screen, (165, 42, 42), [130, 130, 50, 50])
     ColorList = [WHITE, BLACK, BLUE, RED, GREEN, YELLOW, ORANGE, PURPLE, BROWN]
-    RgbList = [(0, 0, 255), (255, 0, 0), (0, 255, 0), (255, 255, 0), (0, 255, 255), (255, 0, 255), (0, 0, 0), (255, 255, 255), (165, 42, 42), (128, 0, 128), (255, 165, 0)]
+    RgbList = [(0, 0, 0), (255, 255, 255), (0, 0, 255), (255, 0, 0), (0, 255, 0), (255, 255, 0), (255, 165, 0), (128, 0, 128), (165, 42, 42)]
     # Brush Sizes interface
     XXSb = pg.draw.rect(screen, "BLACK", [10, 250, 50, 50])
     pg.draw.circle(screen, "WHITE", (35, 275), 5)
@@ -53,7 +53,7 @@ def draw_menu():
     pg.draw.circle(screen, "WHITE", (95, 275), 10)
     Sb = pg.draw.rect(screen, "BLACK", [130, 250, 50, 50])
     pg.draw.circle(screen, "WHITE", (155, 275), 15)
-    BList = [XXSb, XSb, Sb]
+    BList = [Sb, XSb, XXSb]
 
     return BList, ColorList, RgbList
 
@@ -63,26 +63,13 @@ def draw_menu():
 # Game loop
 running = True
 while running:
-    # keep the loop running using teh clock
+    # keep the loop running using the clock
     clock.tick(FPS)
 
     for event in pg.event.get():
-        # check for lcosed window
+        # check for closed window
         if event.type == pg.QUIT:
             running = False
-
-    # Fills the full screen with white
-    screen.fill((0, 0, 0))
-
-    # When the mouse is located on the canvas, based on the configurations, you can draw
-    mouse = pg.mouse.get_pos()
-    if mouse[1] > 70:
-        pg.draw.circle(screen, active_color, mouse, active_size)
-    brushes, colors, Rgbs = draw_menu()
-
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            run = False
 
         if event.type == pg.MOUSEBUTTONDOWN:
             for i in range(len(brushes)):
@@ -93,8 +80,16 @@ while running:
                 if colors[i].collidepoint(event.pos):
                     active_color = Rgbs[i]
 
+    # Fills the full screen with white
+    screen.fill((255, 255, 255))
 
-    # buffer - after drawing everyhting, flip the display
+    # When the mouse is located on the canvas, based on the configurations, you can draw
+    mouse = pg.mouse.get_pos()
+    if mouse[1] > 70:
+        pg.draw.circle(screen, active_color, mouse, active_size)
+    brushes, colors, Rgbs = draw_menu()
+
+    # buffer - after drawing everything, flip the display
     pg.display.flip()
 
 pg.quit()
