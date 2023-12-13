@@ -1,6 +1,6 @@
 # Cites:
-# https://www.youtube.com/watch?v=h2uRcZUfyqM&ab_channel=LeMasterTech
-# https://www.cleanpng.com/png-reset-button-computer-icons-clip-art-restart-828846/
+# Paintbrush tool code from: https://www.youtube.com/watch?v=h2uRcZUfyqM&ab_channel=LeMasterTech
+# Reset icon png from: https://www.cleanpng.com/png-reset-button-computer-icons-clip-art-restart-828846/
 
 '''
 Software: PyPaint
@@ -23,11 +23,7 @@ active_size = 0
 active_color = "black"
 painting = []
 
-# user settings
-PLAYER_JUMP = 23
-PLAYER_GRAV = 1.5
-global PLAYER_FRIC
-PLAYER_FRIC = 0.2
+
 
 
 
@@ -90,8 +86,8 @@ def draw_menu():
 class Eraser(pg.sprite.Sprite):
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load(os.path.join(img_folder, 'reset1.png')).convert()
-        self.image.fill((255, 255, 255))  # Set the color of the eraser (white in this case)
+        self.image = pg.image.load(os.path.join(img_folder, 'reset2.png')).convert()
+        self.image.set_colorkey("BLACK")
         self.rect = self.image.get_rect()
         self.rect.center = (100, 400)
 
