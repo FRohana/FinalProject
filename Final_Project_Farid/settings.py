@@ -4,6 +4,7 @@ HEIGHT = 720
 FPS = 60
 active_size = 0
 active_color = "black"
+painting = []
 
 # user settings
 PLAYER_JUMP = 23

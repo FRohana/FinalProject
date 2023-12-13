@@ -1,6 +1,6 @@
 # Cites:
 # https://www.youtube.com/watch?v=h2uRcZUfyqM&ab_channel=LeMasterTech
-# 
+# https://www.cleanpng.com/png-reset-button-computer-icons-clip-art-restart-828846/
 
 '''
 Software: PyPaint
@@ -15,16 +15,42 @@ Goals:
 '''
 
 
+# settings 
+WIDTH = 1280
+HEIGHT = 720
+FPS = 60
+active_size = 0
+active_color = "black"
+painting = []
+
+# user settings
+PLAYER_JUMP = 23
+PLAYER_GRAV = 1.5
+global PLAYER_FRIC
+PLAYER_FRIC = 0.2
+
+
 
 import pygame as pg
 import random
 from settings import *
+import os
+from pygame.sprite import Sprite
+
+
+game_folder = os.path.dirname(__file__)
+img_folder = os.path.join(game_folder, 'images')
 
 pg.init()
 pg.mixer.init()
-screen = pg.display.set_mode((WIDTH, HEIGHT,))
-pg.display.set_caption("My Game")
+screen = pg.display.set_mode((WIDTH, HEIGHT))
+pg.display.set_caption("PyPaint")
 clock = pg.time.Clock()
+
+
+
+
+# Interface
 
 # This function draws the items and shapes required for the interface of the programm
 def draw_menu():
@@ -55,9 +81,37 @@ def draw_menu():
     pg.draw.circle(screen, "WHITE", (155, 275), 15)
     BList = [Sb, XSb, XXSb]
 
+
     return BList, ColorList, RgbList
 
 
+# Eraser Class
+
+class Eraser(pg.sprite.Sprite):
+    def __init__(self):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.image.load(os.path.join(img_folder, 'reset1.png')).convert()
+        self.image.fill((255, 255, 255))  # Set the color of the eraser (white in this case)
+        self.rect = self.image.get_rect()
+        self.rect.center = (100, 400)
+
+
+    
+
+# Creates a group for all sprites
+all_sprites = pg.sprite.Group()
+
+# make the Eraser class
+Eraser = Eraser()
+
+# adds eraser to all sprites group
+all_sprites.add(Eraser)
+
+
+
+def draw_painting(paints):
+    for i in range(len(paints)):
+        pg.draw.circle(screen, paints[i][0], paints[i][1], paints[i][2])
 
 
 # Game loop
@@ -71,25 +125,46 @@ while running:
         if event.type == pg.QUIT:
             running = False
 
-        if event.type == pg.MOUSEBUTTONDOWN:
-            for i in range(len(brushes)):
-                if brushes[i].collidepoint(event.pos):
-                    active_size = 20 - (i * 5)
-            
-            for i in range(len(colors)):
-                if colors[i].collidepoint(event.pos):
-                    active_color = Rgbs[i]
 
+    if event.type == pg.MOUSEBUTTONDOWN:
+            # Checks if the left mouse button is clicked
+            if event.button == 1:
+                # Check if the eraser tool is selected
+                if Eraser.rect.collidepoint(event.pos):
+                    painting = []  # Clear the painting when using the eraser
+                else:
+                    # Check for brush and color selection as before
+                    for i in range(len(brushes)):
+                        if brushes[i].collidepoint(event.pos):
+                            active_size = 20 - (i * 5)
+                    
+                    for i in range(len(colors)):
+                        if colors[i].collidepoint(event.pos):
+                            active_color = Rgbs[i]
+
+        
     # Fills the full screen with white
     screen.fill((255, 255, 255))
 
     # When the mouse is located on the canvas, based on the configurations, you can draw
     mouse = pg.mouse.get_pos()
-    if mouse[1] > 70:
+    left_click = pg.mouse.get_pressed()[0]
+    if mouse[1] > 1:
         pg.draw.circle(screen, active_color, mouse, active_size)
+    if left_click and mouse[1] > 1:
+        painting.append((active_color, mouse, active_size))
+    draw_painting(painting)
     brushes, colors, Rgbs = draw_menu()
 
-    # buffer - after drawing everything, flip the display
+
+    # Updates all sprites 
+    all_sprites.update()
+
+
+    # draws all sprites
+    all_sprites.draw(screen)
+
+    # after drawing everything, flips the display
     pg.display.flip()
 
 pg.quit()
