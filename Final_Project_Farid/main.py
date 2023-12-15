@@ -33,7 +33,7 @@ from settings import *
 import os
 from pygame.sprite import Sprite
 
-
+# Sets up folders
 game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder, 'images')
 
@@ -57,6 +57,7 @@ def draw_menu():
     pg.draw.rect(screen, "GRAY", [0, 0, 190, 720])
     pg.draw.rect(screen, "BLACK", [190, 0, 5, 610])
     # Start of Color configuration interface
+    # Define rectangles for various colors
     WHITE = pg.draw.rect(screen, (0, 0, 0), [10, 10, 50, 50])
     BLACK = pg.draw.rect(screen, (255, 255, 255), [10, 70, 50, 50])
     BLUE = pg.draw.rect(screen, (0, 0, 255), [10, 130, 50, 50])
@@ -66,9 +67,12 @@ def draw_menu():
     ORANGE = pg.draw.rect(screen, (255, 165, 0), [130, 10, 50, 50])
     PURPLE = pg.draw.rect(screen, (128, 0, 128), [130, 70, 50, 50])
     BROWN = pg.draw.rect(screen, (165, 42, 42), [130, 130, 50, 50])
+    # List of color rectangles
     ColorList = [WHITE, BLACK, BLUE, RED, GREEN, YELLOW, ORANGE, PURPLE, BROWN]
+    # Corresponding RGB values for each color
     RgbList = [(0, 0, 0), (255, 255, 255), (0, 0, 255), (255, 0, 0), (0, 255, 0), (255, 255, 0), (255, 165, 0), (128, 0, 128), (165, 42, 42)]
     # Brush Sizes interface
+    # Defines rectangles for different brush sizes
     XXSb = pg.draw.rect(screen, "BLACK", [10, 250, 50, 50])
     pg.draw.circle(screen, "WHITE", (35, 275), 5)
     XSb = pg.draw.rect(screen, "BLACK", [70, 250, 50, 50])
@@ -81,9 +85,9 @@ def draw_menu():
     return BList, ColorList, RgbList
 
 
-# Eraser Class
+# Reset tool Class
 
-class Eraser(pg.sprite.Sprite):
+class Reset(pg.sprite.Sprite):
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.image.load(os.path.join(img_folder, 'reset2.png')).convert()
@@ -91,20 +95,28 @@ class Eraser(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (100, 400)
 
+# Eraser tool Class
 
-    
+class Eraser (pg.sprite.Sprite):
+    def __init__(self):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.image.load(os.path.join(img_folder, 'reset2.png')).convert()
+        self.image.set_colorkey("BLACK")
+        self.rect = self.image.get_rect()
+        self.rect.center = (100, 700)
 
 # Creates a group for all sprites
 all_sprites = pg.sprite.Group()
 
-# make the Eraser class
-Eraser = Eraser()
+# Creates an instance of the Reset class
+Reset = Reset()
 
-# adds eraser to all sprites group
-all_sprites.add(Eraser)
+# adds all sprites group
+all_sprites.add(Reset)
 
 
 
+# len returns all the items in paints
 def draw_painting(paints):
     for i in range(len(paints)):
         pg.draw.circle(screen, paints[i][0], paints[i][1], paints[i][2])
@@ -125,13 +137,15 @@ while running:
     if event.type == pg.MOUSEBUTTONDOWN:
             # Checks if the left mouse button is clicked
             if event.button == 1:
-                # Check if the eraser tool is selected
-                if Eraser.rect.collidepoint(event.pos):
-                    painting = []  # Clear the painting when using the eraser
+                # Check if the reset tool is selected
+                if Reset.rect.collidepoint(event.pos):
+                    painting = []  # Clear the painting when using the tool
                 else:
                     # Check for brush and color selection as before
                     for i in range(len(brushes)):
+                        # Check if the mouse click position is within the bounds of the current brush rectangle
                         if brushes[i].collidepoint(event.pos):
+                            # Set the active brush size based on the selected brush from brushes
                             active_size = 20 - (i * 5)
                     
                     for i in range(len(colors)):
@@ -146,8 +160,10 @@ while running:
     mouse = pg.mouse.get_pos()
     left_click = pg.mouse.get_pressed()[0]
     if mouse[1] > 1:
+        # Draw a circle at the current mouse position with the active color and size
         pg.draw.circle(screen, active_color, mouse, active_size)
     if left_click and mouse[1] > 1:
+        # Append the current drawing information (color, position, size) to the painting list 
         painting.append((active_color, mouse, active_size))
     draw_painting(painting)
     brushes, colors, Rgbs = draw_menu()
